@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { AbstractTaskRepository } from '../domain/repositories/AbstractTaskRepository.js'
+import { AbstractTaskRepository } from '../../domain/repositories/AbstractTaskRepository.js'
 
 export class TaskController {
   constructor(private readonly taskRepository: AbstractTaskRepository) {}
@@ -19,6 +19,7 @@ export class TaskController {
       const { id } = req.params
       const update = req.body
       const task = await this.taskRepository.updateById(id, update)
+      if (!task) return res.status(400).send({ status: 'failed', message: `Task with id ${id} not exists!` })
       return res.status(200).send({ status: 'success', payload: task })
     } catch (error) {
       next(error)

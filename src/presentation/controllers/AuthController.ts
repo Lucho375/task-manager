@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
-import { AbstractUserRepository } from '../domain/repositories/AbstractUserRepository.js'
-import { AbstractHashService } from '../domain/services/AbstractHashService.js'
-import { AbstractTokenService } from '../domain/services/AbstractTokenService.js'
+import { AbstractUserRepository } from '../../domain/repositories/AbstractUserRepository.js'
+import { AbstractHashService } from '../../domain/services/AbstractHashService.js'
+import { AbstractTokenService } from '../../domain/services/AbstractTokenService.js'
 
 export class AuthController {
   constructor(

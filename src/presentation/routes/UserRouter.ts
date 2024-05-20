@@ -1,6 +1,6 @@
 import { Router } from 'express'
+import { MongooseUserRepository } from '../../infrastructure/repositories/MongooseUserRepository.js'
 import { UserController } from '../controllers/UserController.js'
-import { MongooseUserRepository } from '../repositories/MongooseUserRepository.js'
 
 export class UserRouter {
   static get routes(): Router {
@@ -12,10 +12,9 @@ export class UserRouter {
     // prettier-ignore
 
     router
-      .put('/users/:id', controller.updateUser)
-      .delete('/users/:id', controller.deleteUser)
-      .get('/users/:id', controller.getUserById)
-      .get('/users/email/:email', controller.getUserByEmail)
+      .put('/:id', controller.updateUser)
+      .delete('/:id', controller.deleteUser)
+      .get('/:id', controller.getUserById)
 
     return router
   }

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { AbstractUserRepository } from '../domain/repositories/AbstractUserRepository.js'
+import { AbstractUserRepository } from '../../domain/repositories/AbstractUserRepository.js'
 
 export class UserController {
   constructor(private readonly userRepository: AbstractUserRepository) {}
@@ -43,20 +43,6 @@ export class UserController {
         return
       }
 
-      res.status(200).send(user)
-    } catch (error) {
-      next(error)
-    }
-  }
-
-  public getUserByEmail = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const { email } = req.params
-      const user = await this.userRepository.getUserByEmail(email)
-      if (!user) {
-        res.status(404).send({ message: 'User not found' })
-        return
-      }
       res.status(200).send(user)
     } catch (error) {
       next(error)

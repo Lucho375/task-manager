@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { AbstractTokenService } from '../domain/services/AbstractTokenService.js'
+import { AbstractTokenService } from '../../domain/services/AbstractTokenService.js'
 
 export class TokenService implements AbstractTokenService {
   private readonly secretKey: string

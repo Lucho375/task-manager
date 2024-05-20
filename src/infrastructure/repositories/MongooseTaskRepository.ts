@@ -1,6 +1,6 @@
-import { ITaskEntity, TaskEntity } from '../domain/entities/TaskEntity.js'
-import { AbstractTaskRepository } from '../domain/repositories/AbstractTaskRepository.js'
-import { TaskModel } from '../models/Task.js'
+import { ITaskEntity, TaskEntity } from '../../domain/entities/TaskEntity.js'
+import { TaskModel } from '../../domain/models/Task.js'
+import { AbstractTaskRepository } from '../../domain/repositories/AbstractTaskRepository.js'
 
 export class MongooseTaskRepository implements AbstractTaskRepository {
   constructor(private readonly model = TaskModel) {}
@@ -9,6 +9,7 @@ export class MongooseTaskRepository implements AbstractTaskRepository {
     const createdTask = await this.model.create(task)
     return new TaskEntity({ ...createdTask.toObject(), id: createdTask._id.toString() })
   }
+
   updateById = async (
     id: string,
     taskDto: Partial<Omit<ITaskEntity, 'id' | 'createdAt' | 'updatedAt'>>
@@ -21,7 +22,7 @@ export class MongooseTaskRepository implements AbstractTaskRepository {
   }
 
   deleteById = async (id: string): Promise<ITaskEntity | null> => {
-    const deletedTask = await this.model.findByIdAndDelete({ id })
+    const deletedTask = await this.model.findByIdAndDelete(id)
     if (deletedTask) return new TaskEntity({ ...deletedTask.toObject(), id: deletedTask._id.toString() })
     return null
   }
