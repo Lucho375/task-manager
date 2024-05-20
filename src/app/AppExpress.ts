@@ -1,5 +1,6 @@
-import express, { type Express, urlencoded, json } from 'express'
+import express, { type Express, json, urlencoded } from 'express'
 import { AppRouter } from '../routes/AppRouter.js'
+import { ErrorHandler } from '../middlewares/ErrorHandler.js'
 
 export class AppExpress {
   private readonly app: Express
@@ -9,6 +10,7 @@ export class AppExpress {
     this.port = port
     this.setupMiddlewares()
     this.setupRoutes()
+    this.setupErrorHandler()
   }
 
   private setupMiddlewares() {
@@ -18,6 +20,10 @@ export class AppExpress {
 
   private setupRoutes() {
     this.app.use(AppRouter.routes)
+  }
+
+  private setupErrorHandler() {
+    this.app.use(ErrorHandler)
   }
 
   public listen() {
