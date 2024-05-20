@@ -10,7 +10,7 @@ export class AuthRouter {
 
     const hashService = new HashService()
     const userRepository = new MongooseUserRepository()
-    const tokenService = new TokenService('SECRET_JWT_123123')
+    const tokenService = new TokenService()
     const controller = new AuthController(hashService, userRepository, tokenService)
 
     // prettier-ignore
