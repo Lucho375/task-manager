@@ -1,4 +1,5 @@
 import express, { type Express, urlencoded, json } from 'express'
+import { AppRouter } from '../routes/AppRouter.js'
 
 export class AppExpress {
   private readonly app: Express
@@ -16,7 +17,7 @@ export class AppExpress {
   }
 
   private setupRoutes() {
-    //this.app.use()
+    this.app.use(AppRouter.routes)
   }
 
   public listen() {

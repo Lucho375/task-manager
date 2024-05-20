@@ -1,11 +1,12 @@
 import { Router } from 'express'
 import { TaskController } from '../controllers/TaskController.js'
+import { MongooseTaskRepository } from '../repositories/MongooseTaskRepository.js'
 
 export class TaskRouter {
   static get routes(): Router {
     const router = Router()
 
-    const repository = {}
+    const repository = new MongooseTaskRepository()
     const controller = new TaskController(repository)
 
     // prettier-ignore
