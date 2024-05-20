@@ -1,9 +1,10 @@
 import { AppExpress } from './presentation/application/AppExpress.js'
-import { MongooseDatabase } from './config/database.js'
+import { MongooseDatabase } from './infrastructure/database/mongodb/MongooseDatabase.js'
+import { appConfig } from './config/AppConfig.js'
 ;(async () => {
   try {
-    await MongooseDatabase.connect('mongodb://127.0.0.1:27017/tasks')
-    const app = new AppExpress(8080)
+    await MongooseDatabase.connect(appConfig.DATABASE_URI)
+    const app = new AppExpress(appConfig.PORT)
     app.listen()
   } catch (error) {}
 })()
