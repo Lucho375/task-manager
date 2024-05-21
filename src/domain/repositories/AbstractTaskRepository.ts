@@ -1,4 +1,4 @@
-import { ITaskEntity, TaskEntity } from '../entities/TaskEntity.js'
+import { ITaskEntity } from '../interfaces/ITaskEntity.js'
 
 export abstract class AbstractTaskRepository {
   abstract create(task: Omit<ITaskEntity, 'id' | 'createdAt' | 'updatedAt'>): Promise<ITaskEntity>

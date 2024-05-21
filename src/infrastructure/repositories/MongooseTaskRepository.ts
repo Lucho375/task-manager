@@ -1,4 +1,5 @@
-import { ITaskEntity, TaskEntity } from '../../domain/entities/TaskEntity.js'
+import { TaskEntity } from '../../domain/entities/TaskEntity.js'
+import { ITaskEntity } from '../../domain/interfaces/ITaskEntity.js'
 import { TaskModel } from '../../domain/models/Task.js'
 import { AbstractTaskRepository } from '../../domain/repositories/AbstractTaskRepository.js'
 

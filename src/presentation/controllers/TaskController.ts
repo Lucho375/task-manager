@@ -1,12 +1,14 @@
-import { Request, Response, NextFunction } from 'express'
+import { NextFunction, Response } from 'express'
+import { CreateTaskDto } from '../../domain/dtos/tasks/create.task.dto.js'
+import { IAuthenticatedRequest } from '../../domain/interfaces/IAuthenticatedRequest.js'
 import { AbstractTaskRepository } from '../../domain/repositories/AbstractTaskRepository.js'
 
 export class TaskController {
   constructor(private readonly taskRepository: AbstractTaskRepository) {}
 
-  public create = async (req: Request, res: Response, next: NextFunction) => {
+  public create = async (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
-      const task = req.body
+      const task = CreateTaskDto.validate({ ...req.body, userId: req.user?.userId })
       const createdTask = await this.taskRepository.create(task)
       return res.status(201).send({ status: 'success', payload: createdTask })
     } catch (error) {
@@ -14,7 +16,7 @@ export class TaskController {
     }
   }
 
-  public updateOneById = async (req: Request, res: Response, next: NextFunction) => {
+  public updateOneById = async (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params
       const update = req.body
@@ -26,17 +28,18 @@ export class TaskController {
     }
   }
 
-  public deleteOneById = async (req: Request, res: Response, next: NextFunction) => {
+  public deleteOneById = async (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params
       const deletedTask = await this.taskRepository.deleteById(id)
+      if (!deletedTask) return res.status(400).send({ status: 'failed', message: `Task with id ${id} not exists!` })
       return res.status(200).send({ status: 'success', payload: deletedTask })
     } catch (error) {
       next(error)
     }
   }
 
-  public getAll = async (req: Request, res: Response, next: NextFunction) => {
+  public getAll = async (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       const tasks = await this.taskRepository.getAll()
       return res.status(200).send({ status: 'success', payload: tasks })

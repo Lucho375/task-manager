@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { TaskController } from '../controllers/TaskController.js'
 import { MongooseTaskRepository } from '../../infrastructure/repositories/MongooseTaskRepository.js'
+import { TaskController } from '../controllers/TaskController.js'
 
 export class TaskRouter {
   static get routes(): Router {
@@ -11,10 +11,15 @@ export class TaskRouter {
 
     // prettier-ignore
     router
-      .delete("/:id", controller.deleteOneById)
-      .get("/", controller.getAll)
-      .post("/", controller.create)
-      .put("/:id", controller.updateOneById)
+      .route('/')
+      .get(controller.getAll)
+      .post(controller.create)
+
+    // prettier-ignore
+    router
+      .route('/:id')
+      .delete(controller.deleteOneById)
+      .put(controller.updateOneById)
 
     return router
   }

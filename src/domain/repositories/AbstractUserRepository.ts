@@ -1,4 +1,4 @@
-import { IUserEntity } from '../entities/UserEntity.js'
+import { IUserEntity } from '../interfaces/IUserEntity.js'
 
 export abstract class AbstractUserRepository {
   abstract createUser(userData: Partial<IUserEntity>): Promise<IUserEntity>

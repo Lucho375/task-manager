@@ -15,8 +15,9 @@ export class AuthRouter {
 
     // prettier-ignore
     router
-      .use("/register", controller.register)
-      .use("/login", controller.login )
+    .post('/login', controller.login)
+    .get('/logout', controller.logout)
+    .post('/register', controller.register)
 
     return router
   }

@@ -1,4 +1,5 @@
-import { IUserEntity, UserEntity } from '../../domain/entities/UserEntity.js'
+import { UserEntity } from '../../domain/entities/UserEntity.js'
+import { IUserEntity } from '../../domain/interfaces/IUserEntity.js'
 import { UserModel } from '../../domain/models/User.js'
 import { AbstractUserRepository } from '../../domain/repositories/AbstractUserRepository.js'
 

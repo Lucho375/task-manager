@@ -1,4 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
+import { LoginUserDto } from '../../domain/dtos/auth/login.user.dto.js'
+import { RegisterUserDto } from '../../domain/dtos/auth/register.user.dto.js'
 import { AbstractUserRepository } from '../../domain/repositories/AbstractUserRepository.js'
 import { AbstractHashService } from '../../domain/services/AbstractHashService.js'
 import { AbstractTokenService } from '../../domain/services/AbstractTokenService.js'
@@ -12,7 +14,7 @@ export class AuthController {
 
   public register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const { username, email, password } = req.body
+      const { username, email, password } = RegisterUserDto.validate(req.body)
 
       const existingUser = await this.userRepository.getUserByEmail(email)
 
@@ -32,7 +34,7 @@ export class AuthController {
 
   public login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const { email, password } = req.body
+      const { email, password } = LoginUserDto.validate(req.body)
       const user = await this.userRepository.getUserByEmail(email)
       if (!user) {
         res.status(401).send({ message: 'Invalid credentials' })
@@ -47,7 +49,17 @@ export class AuthController {
 
       const token = this.tokenService.generateToken({ userId: user.id })
 
-      res.status(200).send({ token, user })
+      res.status(200).send({ accessToken: token, user })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  public logout = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      // TODO: implementar logout e invalidar tokens
+
+      res.status(200).send({ status: 'success', message: 'logout ok' })
     } catch (error) {
       next(error)
     }

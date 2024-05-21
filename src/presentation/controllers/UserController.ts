@@ -1,10 +1,11 @@
-import { Request, Response, NextFunction } from 'express'
+import { NextFunction, Response } from 'express'
+import { IAuthenticatedRequest } from '../../domain/interfaces/IAuthenticatedRequest.js'
 import { AbstractUserRepository } from '../../domain/repositories/AbstractUserRepository.js'
 
 export class UserController {
   constructor(private readonly userRepository: AbstractUserRepository) {}
 
-  public updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public updateUser = async (req: IAuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params
       const userData = req.body
@@ -19,7 +20,7 @@ export class UserController {
     }
   }
 
-  public deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public deleteUser = async (req: IAuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params
       const deleted = await this.userRepository.deleteUser(id)
@@ -33,7 +34,7 @@ export class UserController {
     }
   }
 
-  public getUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public getUserById = async (req: IAuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params
       const user = await this.userRepository.getUserById(id)

@@ -1,12 +1,4 @@
-export interface IUserEntity {
-  id: string
-  username: string
-  email: string
-  password: string
-  tasks: string[]
-  createdAt: Date
-  updatedAt: Date
-}
+import { IUserEntity } from '../interfaces/IUserEntity.js'
 
 export class UserEntity {
   public id: string

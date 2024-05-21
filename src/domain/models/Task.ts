@@ -17,8 +17,7 @@ const taskSchema = new Schema(
     status: {
       type: String,
       default: 'pending'
-    },
-    categories: [String]
+    }
   },
   {
     timestamps: true
