@@ -6,20 +6,20 @@ const updateTaskSchema = z.object({
   completed: z.boolean().optional(),
 })
 
-type TUpdateTaskInput = z.infer<typeof updateTaskSchema>
+type TUpdateTaskDto = z.infer<typeof updateTaskSchema>
 
-export class UpdateTaskInput {
+export class UpdateTaskDto {
   readonly title?: string
   readonly description?: string
   readonly completed?: boolean
 
-  private constructor({ title, description, completed }: TUpdateTaskInput) {
+  private constructor({ title, description, completed }: TUpdateTaskDto) {
     this.title = title
     this.description = description
     this.completed = completed
   }
 
   static validate(data: unknown) {
-    return new UpdateTaskInput(updateTaskSchema.parse(data))
+    return new UpdateTaskDto(updateTaskSchema.parse(data))
   }
 }
