@@ -3,7 +3,7 @@ export interface ITaskEntity {
   userId: string
   title: string
   description: string
-  status: string
+  completed: boolean
   createdAt: Date
   updatedAt: Date
 }

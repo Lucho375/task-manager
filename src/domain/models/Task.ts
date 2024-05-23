@@ -14,9 +14,9 @@ const taskSchema = new Schema(
     description: {
       type: String,
     },
-    status: {
-      type: String,
-      default: 'pending',
+    completed: {
+      type: Boolean,
+      default: false,
     },
   },
   {

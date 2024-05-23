@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 const schema = z.object({
   description: z.string(),
-  status: z.string().default('pending'),
+  completed: z.boolean().default(false),
   title: z.string(),
   userId: z.string(),
 })
@@ -11,13 +11,13 @@ type TCreateTaskDto = z.infer<typeof schema>
 
 export class CreateTaskDto {
   readonly description: string
-  readonly status: string
+  readonly completed: boolean
   readonly title: string
   readonly userId: string
 
-  private constructor({ description, status, title, userId }: TCreateTaskDto) {
+  private constructor({ description, completed, title, userId }: TCreateTaskDto) {
     this.description = description
-    this.status = status
+    this.completed = completed
     this.title = title
     this.userId = userId
   }
