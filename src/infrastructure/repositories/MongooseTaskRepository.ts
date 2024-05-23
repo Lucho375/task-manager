@@ -1,21 +1,19 @@
-import { TaskEntity } from '../../domain/entities/TaskEntity.js'
-import { ITaskEntity } from '../../domain/interfaces/ITaskEntity.js'
-import { TaskModel } from '../../domain/models/Task.js'
-import { AbstractTaskRepository } from '../../domain/repositories/AbstractTaskRepository.js'
+import { AbstractTaskRepository, ITaskEntity, TaskEntity, TaskModel, UserModel } from '../../domain/index.js'
 
 export class MongooseTaskRepository implements AbstractTaskRepository {
-  constructor(private readonly model = TaskModel) {}
+  constructor(
+    private readonly taskModel = TaskModel,
+    private readonly userModel = UserModel,
+  ) {}
 
   create = async (task: Omit<ITaskEntity, 'id' | 'createdAt' | 'updatedAt'>): Promise<ITaskEntity> => {
-    const createdTask = await this.model.create(task)
+    const createdTask = await this.taskModel.create(task)
+    await this.userModel.findByIdAndUpdate(task.userId, { $push: { tasks: createdTask._id } })
     return new TaskEntity({ ...createdTask.toObject(), id: createdTask._id.toString() })
   }
 
-  updateById = async (
-    id: string,
-    taskDto: Partial<Omit<ITaskEntity, 'id' | 'createdAt' | 'updatedAt'>>
-  ): Promise<ITaskEntity | null> => {
-    const updatedTask = await this.model.findByIdAndUpdate({ id }, taskDto, { new: true })
+  updateById = async (id: string, taskDto: Partial<Omit<ITaskEntity, 'id' | 'createdAt' | 'updatedAt'>>): Promise<ITaskEntity | null> => {
+    const updatedTask = await this.taskModel.findByIdAndUpdate({ id }, taskDto, { new: true })
     if (updatedTask) {
       return new TaskEntity({ ...updatedTask.toObject(), id: updatedTask._id.toString() })
     }
@@ -23,13 +21,13 @@ export class MongooseTaskRepository implements AbstractTaskRepository {
   }
 
   deleteById = async (id: string): Promise<ITaskEntity | null> => {
-    const deletedTask = await this.model.findByIdAndDelete(id)
+    const deletedTask = await this.taskModel.findByIdAndDelete(id)
     if (deletedTask) return new TaskEntity({ ...deletedTask.toObject(), id: deletedTask._id.toString() })
     return null
   }
 
   getAll = async (): Promise<ITaskEntity[]> => {
-    const tasks = await this.model.find()
-    return tasks.map(task => new TaskEntity({ ...task.toObject(), id: task._id.toString() }))
+    const tasks = await this.taskModel.find()
+    return tasks.map((task) => new TaskEntity({ ...task.toObject(), id: task._id.toString() }))
   }
 }

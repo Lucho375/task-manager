@@ -1,7 +1,5 @@
 import { Router } from 'express'
-import { MongooseUserRepository } from '../../infrastructure/repositories/MongooseUserRepository.js'
-import { HashService } from '../../infrastructure/services/HashService.js'
-import { TokenService } from '../../infrastructure/services/TokenService.js'
+import { HashService, MongooseUserRepository, TokenService } from '../../infrastructure/index.js'
 import { AuthController } from '../controllers/AuthController.js'
 
 export class AuthRouter {

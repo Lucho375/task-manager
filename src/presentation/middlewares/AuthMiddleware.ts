@@ -1,7 +1,5 @@
 import { type NextFunction, type Response } from 'express'
-import { IAuthenticatedRequest } from '../../domain/interfaces/IAuthenticatedRequest.js'
-import { ITokenPayload } from '../../domain/interfaces/ITokenPayload.js'
-import { AbstractTokenService } from '../../domain/services/AbstractTokenService.js'
+import { AbstractTokenService, IAuthenticatedRequest, ITokenPayload } from '../../domain/index.js'
 
 export class AuthMiddleware {
   constructor(private readonly tokenService: AbstractTokenService) {}

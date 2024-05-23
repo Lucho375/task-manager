@@ -1,7 +1,5 @@
 import { NextFunction, Response } from 'express'
-import { CreateTaskDto } from '../../domain/dtos/tasks/create.task.dto.js'
-import { IAuthenticatedRequest } from '../../domain/interfaces/IAuthenticatedRequest.js'
-import { AbstractTaskRepository } from '../../domain/repositories/AbstractTaskRepository.js'
+import { AbstractTaskRepository, CreateTaskDto, IAuthenticatedRequest } from '../../domain/index.js'
 
 export class TaskController {
   constructor(private readonly taskRepository: AbstractTaskRepository) {}

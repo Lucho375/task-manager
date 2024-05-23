@@ -1,13 +1,15 @@
-import { UserEntity } from '../../domain/entities/UserEntity.js'
-import { IUserEntity } from '../../domain/interfaces/IUserEntity.js'
-import { UserModel } from '../../domain/models/User.js'
-import { AbstractUserRepository } from '../../domain/repositories/AbstractUserRepository.js'
+import { Document } from 'mongoose'
+import { AbstractUserRepository, ITaskEntity, IUserEntity, TaskEntity, UserEntity, UserModel } from '../../domain/index.js'
 
 export class MongooseUserRepository implements AbstractUserRepository {
   constructor(private readonly model = UserModel) {}
 
-  private createUserEntity(user: any): IUserEntity {
-    return new UserEntity({ ...user.toObject(), id: user._id.toString() })
+  private createUserEntity(user: Document<unknown, {}, IUserEntity>, withTasks?: boolean): IUserEntity {
+    return new UserEntity({
+      ...user.toObject(),
+      id: user.id.toString(),
+      tasks: withTasks ? user.toObject().tasks?.map((task: ITaskEntity) => new TaskEntity(task)) : undefined!,
+    })
   }
 
   createUser = async (userData: Partial<IUserEntity>): Promise<IUserEntity> => {
@@ -25,9 +27,11 @@ export class MongooseUserRepository implements AbstractUserRepository {
     return !!deletedUser
   }
 
-  getUserById = async (userId: string): Promise<IUserEntity | null> => {
+  getUserById = async (userId: string, withTasks: boolean): Promise<IUserEntity | null> => {
     const user = await this.model.findById(userId)
-    return user ? this.createUserEntity(user) : null
+    if (!user) return null
+    if (withTasks) return this.createUserEntity(await user.populate('tasks'), withTasks)
+    return this.createUserEntity(user)
   }
 
   getUserByEmail = async (email: string): Promise<IUserEntity | null> => {

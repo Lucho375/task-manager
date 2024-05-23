@@ -1,15 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
-import { LoginUserDto } from '../../domain/dtos/auth/login.user.dto.js'
-import { RegisterUserDto } from '../../domain/dtos/auth/register.user.dto.js'
-import { AbstractUserRepository } from '../../domain/repositories/AbstractUserRepository.js'
-import { AbstractHashService } from '../../domain/services/AbstractHashService.js'
-import { AbstractTokenService } from '../../domain/services/AbstractTokenService.js'
+import { AbstractHashService, AbstractTokenService, AbstractUserRepository, LoginUserDto, RegisterUserDto } from '../../domain/index.js'
 
 export class AuthController {
   constructor(
     private readonly hashService: AbstractHashService,
     private readonly userRepository: AbstractUserRepository,
-    private readonly tokenService: AbstractTokenService
+    private readonly tokenService: AbstractTokenService,
   ) {}
 
   public register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

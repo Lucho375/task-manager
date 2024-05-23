@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { MongooseTaskRepository } from '../../infrastructure/repositories/MongooseTaskRepository.js'
+import { MongooseTaskRepository } from '../../infrastructure/index.js'
 import { TaskController } from '../controllers/TaskController.js'
 
 export class TaskRouter {

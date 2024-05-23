@@ -1,5 +1,5 @@
 import { AppExpress } from './presentation/application/AppExpress.js'
-import { MongooseDatabase } from './infrastructure/database/mongodb/MongooseDatabase.js'
+import { MongooseDatabase } from './infrastructure/index.js'
 import { appConfig } from './config/AppConfig.js'
 ;(async () => {
   try {

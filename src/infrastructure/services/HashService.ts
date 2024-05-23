@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { AbstractHashService } from '../../domain/services/AbstractHashService.js'
+import { AbstractHashService } from '../../domain/index.js'
 
 export class HashService implements AbstractHashService {
   async hash(data: string): Promise<string> {

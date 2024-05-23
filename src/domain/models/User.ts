@@ -4,23 +4,23 @@ const userSchema = new Schema({
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   tasks: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Task'
-    }
-  ]
+      ref: 'Task',
+    },
+  ],
 })
 
 export const UserModel = model('User', userSchema)

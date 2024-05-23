@@ -1,4 +1,4 @@
-import { ITaskEntity } from '../interfaces/ITaskEntity.js'
+import { ITaskEntity } from '../index.js'
 export class TaskEntity {
   public id: string
   public userId: string

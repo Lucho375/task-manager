@@ -4,7 +4,7 @@ const schema = z.object({
   description: z.string(),
   status: z.string().default('pending'),
   title: z.string(),
-  userId: z.string()
+  userId: z.string(),
 })
 
 type TCreateTaskDto = z.infer<typeof schema>

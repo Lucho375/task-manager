@@ -1,9 +1,7 @@
 import { Router } from 'express'
-import { AuthRouter } from './AuthRouter.js'
-import { TaskRouter } from './TaskRouter.js'
-import { UserRouter } from './UserRouter.js'
+import { TokenService } from '../../infrastructure/index.js'
 import { AuthMiddleware } from '../middlewares/AuthMiddleware.js'
-import { TokenService } from '../../infrastructure/services/TokenService.js'
+import { AuthRouter, TaskRouter, UserRouter } from './index.js'
 
 export class AppRouter {
   static get routes(): Router {

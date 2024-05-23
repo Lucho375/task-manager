@@ -1,4 +1,4 @@
-import { IUserEntity } from '../interfaces/IUserEntity.js'
+import { IUserEntity } from '../index.js'
 
 export abstract class AbstractUserRepository {
   abstract createUser(userData: Partial<IUserEntity>): Promise<IUserEntity>
@@ -7,7 +7,7 @@ export abstract class AbstractUserRepository {
 
   abstract deleteUser(userId: string): Promise<boolean>
 
-  abstract getUserById(userId: string): Promise<IUserEntity | null>
+  abstract getUserById(userId: string, withTasks?: boolean): Promise<IUserEntity | null>
 
   abstract getUserByEmail(email: string): Promise<IUserEntity | null>
 }

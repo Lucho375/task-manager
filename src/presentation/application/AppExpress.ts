@@ -1,6 +1,6 @@
 import express, { type Express, json, urlencoded } from 'express'
-import { AppRouter } from '../routes/AppRouter.js'
 import { ErrorHandler } from '../middlewares/ErrorHandler.js'
+import { AppRouter } from '../routes/index.js'
 
 export class AppExpress {
   private readonly app: Express

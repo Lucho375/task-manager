@@ -5,23 +5,23 @@ const taskSchema = new Schema(
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true
+      required: true,
     },
     title: {
       type: String,
-      required: true
+      required: true,
     },
     description: {
-      type: String
+      type: String,
     },
     status: {
       type: String,
-      default: 'pending'
-    }
+      default: 'pending',
+    },
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 )
 
 export const TaskModel = model('Task', taskSchema)

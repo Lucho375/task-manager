@@ -1,4 +1,4 @@
-import { IUserEntity } from '../interfaces/IUserEntity.js'
+import { ITaskEntity, IUserEntity } from '../index.js'
 
 export class UserEntity {
   public id: string
@@ -7,7 +7,7 @@ export class UserEntity {
   public username: string
   public email: string
   public password: string
-  public tasks: string[]
+  public tasks: ITaskEntity[]
 
   constructor({ id, createdAt, updatedAt, username, email, password, tasks }: IUserEntity) {
     this.id = id
@@ -16,6 +16,6 @@ export class UserEntity {
     this.username = username
     this.email = email
     this.password = password
-    this.tasks = tasks || []
+    this.tasks = tasks
   }
 }

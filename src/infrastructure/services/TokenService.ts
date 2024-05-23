@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { appConfig } from '../../config/AppConfig.js'
-import { AbstractTokenService } from '../../domain/services/AbstractTokenService.js'
+import { AbstractTokenService } from '../../domain/index.js'
 
 export class TokenService implements AbstractTokenService {
   private readonly secretKey: string = appConfig.JWT_SECRET

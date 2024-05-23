@@ -3,9 +3,9 @@ import { z } from 'zod'
 dotenv.config()
 
 const AppConfigSchema = z.object({
-  PORT: z.string().transform(value => parseInt(value, 10)),
+  PORT: z.string().transform((value) => parseInt(value, 10)),
   DATABASE_URI: z.string().url(),
-  JWT_SECRET: z.string().min(1)
+  JWT_SECRET: z.string().min(1),
 })
 
 type AppConfigType = z.infer<typeof AppConfigSchema>

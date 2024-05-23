@@ -1,19 +1,19 @@
 import { NextFunction, Response } from 'express'
-import { IAuthenticatedRequest } from '../../domain/interfaces/IAuthenticatedRequest.js'
-import { AbstractUserRepository } from '../../domain/repositories/AbstractUserRepository.js'
+import { AbstractHashService, AbstractUserRepository, GetUserDto, IAuthenticatedRequest, UpdateUserDto } from '../../domain/index.js'
 
 export class UserController {
-  constructor(private readonly userRepository: AbstractUserRepository) {}
+  constructor(
+    private readonly userRepository: AbstractUserRepository,
+    private readonly hashService: AbstractHashService,
+  ) {}
 
   public updateUser = async (req: IAuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const { id } = req.params
-      const userData = req.body
-      const updatedUser = await this.userRepository.updateUser(id, userData)
-      if (!updatedUser) {
-        res.status(404).send({ message: 'User not found' })
-        return
+      const userData = UpdateUserDto.validate(req.body)
+      if (userData.password) {
+        userData.password = await this.hashService.hash(userData.password)
       }
+      const updatedUser = await this.userRepository.updateUser(req.user?.userId!, userData)
       res.status(200).send(updatedUser)
     } catch (error) {
       next(error)
@@ -22,13 +22,8 @@ export class UserController {
 
   public deleteUser = async (req: IAuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const { id } = req.params
-      const deleted = await this.userRepository.deleteUser(id)
-      if (!deleted) {
-        res.status(404).send({ message: 'User not found' })
-        return
-      }
-      res.send({ message: 'User deleted successfully' })
+      await this.userRepository.deleteUser(req.user?.userId!)
+      res.status(200).send({ message: 'User deleted successfully' })
     } catch (error) {
       next(error)
     }
@@ -36,14 +31,8 @@ export class UserController {
 
   public getUserById = async (req: IAuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const { id } = req.params
-      const user = await this.userRepository.getUserById(id)
-
-      if (!user) {
-        res.status(404).send({ message: 'User not found' })
-        return
-      }
-
+      const { tasks } = GetUserDto.validate(req.query)
+      const user = await this.userRepository.getUserById(req.user?.userId!, tasks)
       res.status(200).send(user)
     } catch (error) {
       next(error)
