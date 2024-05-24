@@ -1,5 +1,5 @@
 import { NextFunction, Response } from 'express'
-import { AbstractTaskRepository, CreateTaskDto, IAuthenticatedRequest } from '../../domain/index.js'
+import { AbstractTaskRepository, CreateTaskDto, CustomError, IAuthenticatedRequest, UpdateTaskDto } from '../../domain/index.js'
 
 export class TaskController {
   constructor(private readonly taskRepository: AbstractTaskRepository) {}
@@ -17,9 +17,11 @@ export class TaskController {
   public updateOneById = async (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params
-      const update = req.body
+      const update = UpdateTaskDto.validate(req.body)
       const task = await this.taskRepository.updateById(id, update)
-      if (!task) return res.status(400).send({ status: 'failed', message: `Task with id ${id} not exists!` })
+      if (!task) {
+        CustomError.badRequest(`Task with id ${id} not exists`)
+      }
       return res.status(200).send({ status: 'success', payload: task })
     } catch (error) {
       next(error)
@@ -30,7 +32,9 @@ export class TaskController {
     try {
       const { id } = req.params
       const deletedTask = await this.taskRepository.deleteById(id)
-      if (!deletedTask) return res.status(400).send({ status: 'failed', message: `Task with id ${id} not exists!` })
+      if (!deletedTask) {
+        CustomError.badRequest(`Task with id ${id} not exists`)
+      }
       return res.status(200).send({ status: 'success', payload: deletedTask })
     } catch (error) {
       next(error)

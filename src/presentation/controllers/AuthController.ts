@@ -1,5 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
-import { AbstractHashService, AbstractTokenService, AbstractUserRepository, LoginUserDto, RegisterUserDto } from '../../domain/index.js'
+import {
+  AbstractHashService,
+  AbstractTokenService,
+  AbstractUserRepository,
+  CustomError,
+  LoginUserDto,
+  RegisterUserDto,
+} from '../../domain/index.js'
 
 export class AuthController {
   constructor(
@@ -15,8 +22,7 @@ export class AuthController {
       const existingUser = await this.userRepository.getUserByEmail(email)
 
       if (existingUser) {
-        res.status(400).send({ message: 'User already exists' })
-        return
+        CustomError.badRequest('User already exists')
       }
 
       const hashedPassword = await this.hashService.hash(password)
@@ -33,14 +39,12 @@ export class AuthController {
       const { email, password } = LoginUserDto.validate(req.body)
       const user = await this.userRepository.getUserByEmail(email)
       if (!user) {
-        res.status(401).send({ message: 'Invalid credentials' })
-        return
+        CustomError.unauthorized('Invalid credentialssssss')
       }
 
       const isPasswordValid = await this.hashService.compare(password, user.password)
       if (!isPasswordValid) {
-        res.status(401).send({ message: 'Invalid credentials' })
-        return
+        CustomError.unauthorized('Invalid credentials')
       }
 
       const token = this.tokenService.generateToken({ userId: user.id })
