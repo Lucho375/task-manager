@@ -6,6 +6,7 @@ const AppConfigSchema = z.object({
   PORT: z.string().transform((value) => parseInt(value, 10)),
   DATABASE_URI: z.string().url(),
   JWT_SECRET: z.string().min(1),
+  DB_TYPE: z.enum(['mongo', 'mysql']),
 })
 
 type AppConfigType = z.infer<typeof AppConfigSchema>
@@ -45,6 +46,10 @@ class AppConfig {
 
   get JWT_SECRET(): string {
     return this.config.JWT_SECRET
+  }
+
+  get DB_TYPE(): string {
+    return this.config.DB_TYPE
   }
 }
 
