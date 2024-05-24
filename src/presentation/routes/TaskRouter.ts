@@ -1,12 +1,14 @@
 import { Router } from 'express'
-import { MongooseTaskRepository } from '../../infrastructure/index.js'
+import { appConfig } from '../../config/AppConfig.js'
+import { TaskRepositoryFactory } from '../../domain/index.js'
+import { DatabaseType } from '../../infrastructure/index.js'
 import { TaskController } from '../controllers/TaskController.js'
 
 export class TaskRouter {
   static get routes(): Router {
     const router = Router()
 
-    const repository = new MongooseTaskRepository()
+    const repository = TaskRepositoryFactory.createRepository(appConfig.DB_TYPE as DatabaseType)
     const controller = new TaskController(repository)
 
     // prettier-ignore

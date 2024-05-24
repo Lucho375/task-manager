@@ -1,5 +1,7 @@
 import { Router } from 'express'
-import { HashService, MongooseUserRepository, TokenService } from '../../infrastructure/index.js'
+import { appConfig } from '../../config/AppConfig.js'
+import { UserRepositoryFactory } from '../../domain/index.js'
+import { DatabaseType, HashService, TokenService } from '../../infrastructure/index.js'
 import { AuthController } from '../controllers/AuthController.js'
 
 export class AuthRouter {
@@ -7,9 +9,9 @@ export class AuthRouter {
     const router = Router()
 
     const hashService = new HashService()
-    const userRepository = new MongooseUserRepository()
+    const repository = UserRepositoryFactory.createRepository(appConfig.DB_TYPE as DatabaseType)
     const tokenService = new TokenService()
-    const controller = new AuthController(hashService, userRepository, tokenService)
+    const controller = new AuthController(hashService, repository, tokenService)
 
     // prettier-ignore
     router
