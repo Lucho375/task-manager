@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { appConfig } from '../../config/AppConfig.js'
+import { AppConfig } from '../../config/AppConfig.js'
 import { UserRepositoryFactory } from '../../domain/index.js'
 import { DatabaseType, HashService, TokenService } from '../../infrastructure/index.js'
 import { AuthController } from '../controllers/AuthController.js'
@@ -9,7 +9,7 @@ export class AuthRouter {
     const router = Router()
 
     const hashService = new HashService()
-    const repository = UserRepositoryFactory.createRepository(appConfig.DB_TYPE as DatabaseType)
+    const repository = UserRepositoryFactory.createRepository(AppConfig.getInstance().DB_TYPE as DatabaseType)
     const tokenService = new TokenService()
     const controller = new AuthController(hashService, repository, tokenService)
 
