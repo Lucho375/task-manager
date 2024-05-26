@@ -17,8 +17,9 @@ export class MongooseDatabase implements IDatabase {
     try {
       this.connection = await mongoose.connect(uri)
       console.log('Connected to mongoose')
-    } catch (err) {
-      console.log('Error connecting to mongoose', err)
+    } catch (error) {
+      console.log('Error connecting to mongoose', error)
+      throw error
     }
   }
 
@@ -28,6 +29,7 @@ export class MongooseDatabase implements IDatabase {
       console.log('Disconnected from mongoose')
     } catch (error) {
       console.log('Error disconnecting from mongoose', error)
+      throw error
     }
   }
 }

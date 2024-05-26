@@ -6,7 +6,7 @@ export class UserORMEntity {
   @PrimaryGeneratedColumn('uuid')
   public id!: string
 
-  @Column()
+  @Column({ unique: true })
   public username!: string
 
   @Column({ unique: true })
@@ -15,7 +15,7 @@ export class UserORMEntity {
   @Column()
   public password!: string
 
-  @OneToMany(() => TaskORMEntity, (task) => task.user)
+  @OneToMany('TaskORMEntity', (task: TaskORMEntity) => task.user)
   public tasks!: TaskORMEntity[]
 
   @CreateDateColumn()

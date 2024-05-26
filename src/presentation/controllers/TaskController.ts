@@ -22,7 +22,7 @@ export class TaskController {
       if (!task) {
         CustomError.badRequest(`Task with id ${id} not exists`)
       }
-      return res.status(200).send({ status: 'success', payload: task })
+      return res.status(200).send({ status: 'success' })
     } catch (error) {
       next(error)
     }
@@ -35,7 +35,7 @@ export class TaskController {
       if (!deletedTask) {
         CustomError.badRequest(`Task with id ${id} not exists`)
       }
-      return res.status(200).send({ status: 'success', payload: deletedTask })
+      return res.status(200).send({ status: 'success' })
     } catch (error) {
       next(error)
     }
@@ -43,7 +43,7 @@ export class TaskController {
 
   public getAll = async (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
-      const tasks = await this.taskRepository.getAll()
+      const tasks = await this.taskRepository.getAll(req.user?.userId!)
       return res.status(200).send({ status: 'success', payload: tasks })
     } catch (error) {
       next(error)

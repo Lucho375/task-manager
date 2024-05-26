@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 import { UserORMEntity } from './User.js'
 
 @Entity()
@@ -6,7 +6,8 @@ export class TaskORMEntity {
   @PrimaryGeneratedColumn('uuid')
   public id!: string
 
-  @ManyToOne(() => UserORMEntity, (user) => user.tasks)
+  @ManyToOne('UserORMEntity', (user: UserORMEntity) => user.tasks)
+  @JoinColumn()
   public user!: UserORMEntity
 
   @Column()

@@ -13,18 +13,15 @@ export class MongooseTaskRepository implements AbstractTaskRepository {
     return new TaskEntity({ ...createdTask.toObject(), id: createdTask._id.toString() })
   }
 
-  updateById = async (id: string, taskDto: Partial<Omit<ITaskEntity, 'id' | 'createdAt' | 'updatedAt'>>): Promise<ITaskEntity | null> => {
+  updateById = async (id: string, taskDto: Partial<Omit<ITaskEntity, 'id' | 'createdAt' | 'updatedAt'>>): Promise<boolean> => {
     const updatedTask = await this.taskModel.findByIdAndUpdate({ id }, taskDto, { new: true })
-    if (updatedTask) {
-      return new TaskEntity({ ...updatedTask.toObject(), id: updatedTask._id.toString() })
-    }
-    return null
+    return updatedTask !== null
   }
 
-  deleteById = async (id: string): Promise<ITaskEntity | null> => {
+  deleteById = async (id: string): Promise<boolean> => {
     const deletedTask = await this.taskModel.findByIdAndDelete(id)
-    if (deletedTask) return new TaskEntity({ ...deletedTask.toObject(), id: deletedTask._id.toString() })
-    return null
+    if (deletedTask) true
+    return false
   }
 
   getAll = async (): Promise<ITaskEntity[]> => {

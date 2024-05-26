@@ -19,10 +19,11 @@ export class AuthController {
     try {
       const { username, email, password } = RegisterUserDto.validate(req.body)
 
-      const existingUser = await this.userRepository.getUserByEmail(email)
+      const emailExists = await this.userRepository.getUserByEmail(email)
+      const userNameExists = await this.userRepository.getUserByUsername(username)
 
-      if (existingUser) {
-        CustomError.badRequest('User already exists')
+      if (emailExists || userNameExists) {
+        CustomError.badRequest('User already exists!')
       }
 
       const hashedPassword = await this.hashService.hash(password)
