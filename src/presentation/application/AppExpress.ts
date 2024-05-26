@@ -1,5 +1,7 @@
 import express, { type Express, json, urlencoded } from 'express'
+import { infoLogger } from '../../infrastructure/index.js'
 import { ErrorHandler } from '../middlewares/ErrorHandler.js'
+import { LoggerMiddleware } from '../middlewares/LoggerMiddleware.js'
 import { AppRouter } from '../routes/index.js'
 
 export class AppExpress {
@@ -16,6 +18,7 @@ export class AppExpress {
   private setupMiddlewares() {
     this.app.use(json())
     this.app.use(urlencoded({ extended: true }))
+    this.app.use(LoggerMiddleware)
   }
 
   private setupRoutes() {
@@ -28,7 +31,7 @@ export class AppExpress {
 
   public listen() {
     this.app.listen(this.port, () => {
-      console.log(`Server running on ${this.port}`)
+      infoLogger.info(`Server running on ${this.port}`)
     })
   }
 }
