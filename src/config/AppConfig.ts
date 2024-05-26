@@ -4,14 +4,15 @@ dotenv.config()
 
 const AppConfigSchema = z.object({
   PORT: z.string().transform((value) => parseInt(value, 10)),
-  DATABASE_URI: z.string().url(),
+  DB_URI: z.string().url(),
   JWT_SECRET: z.string().min(1),
   DB_TYPE: z.enum(['mongo', 'mysql']),
+  NODE_ENV: z.enum(['production', 'development', 'test']),
 })
 
 type AppConfigType = z.infer<typeof AppConfigSchema>
 
-class AppConfig {
+export class AppConfig {
   private static instance: AppConfig
   private config: AppConfigType
 
@@ -31,8 +32,7 @@ class AppConfig {
     try {
       return AppConfigSchema.parse(envVars)
     } catch (error) {
-      console.error('Error loading environment variables :', error)
-      process.exit(1)
+      throw error
     }
   }
 
@@ -40,8 +40,8 @@ class AppConfig {
     return this.config.PORT
   }
 
-  get DATABASE_URI(): string {
-    return this.config.DATABASE_URI
+  get DB_URI(): string {
+    return this.config.DB_URI
   }
 
   get JWT_SECRET(): string {
@@ -51,6 +51,8 @@ class AppConfig {
   get DB_TYPE(): string {
     return this.config.DB_TYPE
   }
-}
 
-export const appConfig = AppConfig.getInstance()
+  get NODE_ENV(): string {
+    return this.config.NODE_ENV
+  }
+}
