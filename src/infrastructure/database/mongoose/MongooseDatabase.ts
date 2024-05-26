@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import { IDatabase } from '../../../domain/index.js'
+import { errorLogger, infoLogger } from '../../index.js'
 
 export class MongooseDatabase implements IDatabase {
   private static instance: MongooseDatabase
@@ -16,9 +17,9 @@ export class MongooseDatabase implements IDatabase {
   async connect(uri: string): Promise<void> {
     try {
       this.connection = await mongoose.connect(uri)
-      console.log('Connected to mongoose')
+      infoLogger.info('Connected to mongoose')
     } catch (error) {
-      console.log('Error connecting to mongoose', error)
+      errorLogger.error(`Error connecting to mongoose : ${error}`)
       throw error
     }
   }
@@ -26,9 +27,9 @@ export class MongooseDatabase implements IDatabase {
   async disconnect(): Promise<void> {
     try {
       await this.connection.disconnect()
-      console.log('Disconnected from mongoose')
+      infoLogger.info('Disconnected from mongoose')
     } catch (error) {
-      console.log('Error disconnecting from mongoose', error)
+      errorLogger.error(`Error disconnecting from mongoose: ${error}`)
       throw error
     }
   }

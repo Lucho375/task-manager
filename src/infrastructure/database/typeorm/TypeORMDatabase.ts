@@ -2,6 +2,8 @@ import { DataSource, EntityTarget, ObjectLiteral, Repository } from 'typeorm'
 import { IDatabase } from '../../../domain/index.js'
 import { TaskORMEntity } from './models/Task.js'
 import { UserORMEntity } from './models/User.js'
+import { infoLogger } from '../../logger/infoLogger.js'
+import { errorLogger } from '../../logger/errorLogger.js'
 
 export class TypeORMDatabase implements IDatabase {
   private static instance: TypeORMDatabase
@@ -21,16 +23,16 @@ export class TypeORMDatabase implements IDatabase {
       this.datasource = new DataSource({
         type: 'mysql',
         synchronize: true,
-        logging: true,
+        logging: false,
         entities: [TaskORMEntity, UserORMEntity],
         subscribers: [],
         migrations: [],
         url: uri,
       })
       await this.datasource.initialize()
-      console.log(`Connected to ${this.datasource.options.type}`)
+      infoLogger.info(`Connected to ${this.datasource.options.type}`)
     } catch (error) {
-      console.error('Error connecting to MySQL database:', error)
+      errorLogger.error(`Error connecting to MySQL database: ${error}`)
       throw error
     }
   }
@@ -38,9 +40,9 @@ export class TypeORMDatabase implements IDatabase {
   public async disconnect(): Promise<void> {
     try {
       await this.datasource.destroy()
-      console.log(`Disconnected from ${this.datasource.options.type}`)
+      infoLogger.info(`Disconnected from ${this.datasource.options.type}`)
     } catch (error) {
-      console.error('Error disconnecting from MySQL database:', error)
+      errorLogger.error(`Error disconnecting from MySQL database: ${error}`)
       throw error
     }
   }
