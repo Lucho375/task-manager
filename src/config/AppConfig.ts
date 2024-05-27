@@ -8,11 +8,12 @@ const AppConfigSchema = z.object({
   JWT_SECRET: z.string().min(1),
   DB_TYPE: z.enum(['mongo', 'mysql']),
   NODE_ENV: z.enum(['production', 'development', 'test']),
+  BACKUP_DIR: z.string().default('backup'),
 })
 
 type AppConfigType = z.infer<typeof AppConfigSchema>
 
-export class AppConfig {
+class AppConfig {
   private static instance: AppConfig
   private config: AppConfigType
 
@@ -55,4 +56,12 @@ export class AppConfig {
   get NODE_ENV(): string {
     return this.config.NODE_ENV
   }
+
+  get BACKUP_DIR(): string {
+    return this.config.BACKUP_DIR
+  }
 }
+
+const { DB_TYPE, DB_URI, JWT_SECRET, NODE_ENV: NODE_ENV, PORT, BACKUP_DIR } = AppConfig.getInstance()
+
+export { DB_TYPE, DB_URI, JWT_SECRET, NODE_ENV, PORT, BACKUP_DIR }

@@ -1,9 +1,8 @@
 import { type NextFunction, type Request, type Response } from 'express'
-import { AppConfig } from '../../config/AppConfig.js'
+import { NODE_ENV } from '../../config/AppConfig.js'
 import { infoLogger } from '../../infrastructure/index.js'
 
 export function LoggerMiddleware(req: Request, res: Response, next: NextFunction) {
-  const NODE_ENV = AppConfig.getInstance().NODE_ENV
   if (NODE_ENV === 'development') {
     const { params, body, query } = req
     const auth = req.headers.authorization || req.headers.Authorization
