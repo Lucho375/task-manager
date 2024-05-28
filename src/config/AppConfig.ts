@@ -5,7 +5,8 @@ dotenv.config()
 const AppConfigSchema = z.object({
   PORT: z.string().transform((value) => parseInt(value, 10)),
   DB_URI: z.string().url(),
-  JWT_SECRET: z.string().min(1),
+  ACCESS_TOKEN_SECRET: z.string().min(1),
+  REFRESH_TOKEN_SECRET: z.string().min(1),
   DB_TYPE: z.enum(['mongo', 'mysql']),
   NODE_ENV: z.enum(['production', 'development', 'test']),
   BACKUP_DIR: z.string().default('backup'),
@@ -46,8 +47,12 @@ class AppConfig {
     return this.config.DB_URI
   }
 
-  get JWT_SECRET(): string {
-    return this.config.JWT_SECRET
+  get ACCESS_TOKEN_SECRET(): string {
+    return this.config.ACCESS_TOKEN_SECRET
+  }
+
+  get REFRESH_TOKEN_SECRET(): string {
+    return this.config.REFRESH_TOKEN_SECRET
   }
 
   get DB_TYPE(): string {
@@ -67,6 +72,15 @@ class AppConfig {
   }
 }
 
-const { DB_TYPE, DB_URI, JWT_SECRET, NODE_ENV: NODE_ENV, PORT, BACKUP_DIR, REDIS_URL } = AppConfig.getInstance()
+const {
+  DB_TYPE,
+  DB_URI,
+  ACCESS_TOKEN_SECRET,
+  REFRESH_TOKEN_SECRET,
+  NODE_ENV: NODE_ENV,
+  PORT,
+  BACKUP_DIR,
+  REDIS_URL,
+} = AppConfig.getInstance()
 
-export { DB_TYPE, DB_URI, JWT_SECRET, NODE_ENV, PORT, BACKUP_DIR, REDIS_URL }
+export { DB_TYPE, DB_URI, ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET, NODE_ENV, PORT, BACKUP_DIR, REDIS_URL }

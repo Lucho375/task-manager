@@ -1,4 +1,5 @@
 export abstract class AbstractTokenService {
-  abstract generateToken(payload: Record<string, any>): string
+  abstract generateAccessToken(payload: Record<string, any>): string
+  abstract generateRefreshToken(payload: Record<string, any>): string
   abstract verifyToken<T>(token: string): T
 }

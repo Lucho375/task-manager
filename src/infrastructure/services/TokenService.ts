@@ -1,17 +1,22 @@
 import jwt from 'jsonwebtoken'
-import { JWT_SECRET } from '../../config/AppConfig.js'
+import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from '../../config/AppConfig.js'
 import { AbstractTokenService } from '../../domain/index.js'
 
 export class TokenService implements AbstractTokenService {
-  private readonly secretKey: string = JWT_SECRET
+  private readonly ACCESS_SECRET: string = ACCESS_TOKEN_SECRET
+  private readonly REFRESH_SECRET: string = REFRESH_TOKEN_SECRET
 
-  generateToken(payload: Record<string, any>): string {
-    return jwt.sign(payload, this.secretKey, { expiresIn: 100000 })
+  generateAccessToken(payload: Record<string, any>): string {
+    return jwt.sign(payload, this.ACCESS_SECRET, { expiresIn: 600 })
+  }
+
+  generateRefreshToken(payload: Record<string, any>): string {
+    return jwt.sign(payload, this.REFRESH_SECRET, { expiresIn: 1200 })
   }
 
   verifyToken<T>(token: string): T {
     try {
-      const decoded = jwt.verify(token, this.secretKey)
+      const decoded = jwt.verify(token, this.ACCESS_SECRET)
       return decoded as T
     } catch (error) {
       throw error

@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
+import { NODE_ENV } from '../../config/AppConfig.js'
 import {
   AbstractHashService,
   AbstractTokenService,
   AbstractUserRepository,
   CustomError,
+  ENODE_ENV,
   LoginUserDto,
   RegisterUserDto,
 } from '../../domain/index.js'
@@ -33,8 +35,7 @@ export class AuthController {
 
       const hashedPassword = await this.hashService.hash(password)
       const newUser = await this.userRepository.createUser({ username, email, password: hashedPassword })
-      const token = this.tokenService.generateToken({ userId: newUser.id })
-      HTTPResponse.success(res, 201, 'User created', { ...newUser, accessToken: token })
+      HTTPResponse.success(res, 201, 'User created', { ...newUser })
     } catch (error) {
       next(error)
     }
@@ -53,8 +54,14 @@ export class AuthController {
         CustomError.unauthorized('Invalid credentials')
       }
 
-      const token = this.tokenService.generateToken({ userId: user.id })
-      HTTPResponse.success(res, 200, 'login success', { accessToken: token, ...user })
+      const accessToken = this.tokenService.generateAccessToken({ userId: user.id })
+      const refreshToken = this.tokenService.generateRefreshToken({ userId: user.id })
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: NODE_ENV === ENODE_ENV.Production,
+        sameSite: 'strict',
+      })
+      HTTPResponse.success(res, 200, 'login success', { accessToken, ...user })
     } catch (error) {
       next(error)
     }
@@ -65,6 +72,11 @@ export class AuthController {
       const authHeader = req.headers.authorization || req.headers['Authorization']
       const token = (authHeader as string).split(' ')[1]
       await this.tokenBlacklistService.addtoBlacklist(token)
+      res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: NODE_ENV === ENODE_ENV.Production,
+        sameSite: 'strict',
+      })
       HTTPResponse.success(res, 200, 'Logout success')
     } catch (error) {
       next(error)
