@@ -7,6 +7,7 @@ import {
   IAuthenticatedRequest,
   UpdateUserDto,
 } from '../../domain/index.js'
+import { HTTPResponse } from '../http/HTTPResponse.js'
 
 export class UserController {
   constructor(
@@ -20,8 +21,8 @@ export class UserController {
       if (userData.password) {
         userData.password = await this.hashService.hash(userData.password)
       }
-      const updatedUser = await this.userRepository.updateUser(req.user?.userId!, userData)
-      res.status(200).send(updatedUser)
+      await this.userRepository.updateUser(req.user?.userId!, userData)
+      HTTPResponse.success(res, 200, 'User updated')
     } catch (error) {
       next(error)
     }
@@ -31,11 +32,10 @@ export class UserController {
     try {
       const deleted = await this.userRepository.deleteUser(req.user?.userId!)
 
-      if (deleted) {
-        res.status(200).send({ message: 'User deleted successfully' })
-        return
+      if (!deleted) {
+        CustomError.badRequest(`User with id ${req.user?.userId} not exists`)
       }
-      CustomError.badRequest(`User with id ${req.user?.userId} not exists`)
+      HTTPResponse.success(res, 200, 'User deleted')
     } catch (error) {
       next(error)
     }
@@ -46,7 +46,8 @@ export class UserController {
       const { tasks } = GetUserDto.validate(req.query)
       const user = await this.userRepository.getUserById(req.user?.userId!, tasks)
       if (!user) CustomError.badRequest(`User with id ${req.user?.userId} not exists`)
-      res.status(200).send(user)
+
+      HTTPResponse.success(res, 200, undefined, { ...user })
     } catch (error) {
       next(error)
     }

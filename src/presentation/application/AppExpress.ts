@@ -1,4 +1,7 @@
+import cookieParser from 'cookie-parser'
+import cors from 'cors'
 import express, { type Express, json, urlencoded } from 'express'
+import { IncomingMessage, Server, ServerResponse } from 'http'
 import { infoLogger } from '../../infrastructure/index.js'
 import { ErrorHandler } from '../middlewares/ErrorHandler.js'
 import { LoggerMiddleware } from '../middlewares/LoggerMiddleware.js'
@@ -15,23 +18,25 @@ export class AppExpress {
     this.setupErrorHandler()
   }
 
-  private setupMiddlewares() {
+  private setupMiddlewares(): void {
+    this.app.use(cors())
     this.app.use(json())
     this.app.use(urlencoded({ extended: true }))
+    this.app.use(cookieParser())
     this.app.use(LoggerMiddleware)
   }
 
-  private setupRoutes() {
+  private setupRoutes(): void {
     this.app.use(AppRouter.routes)
   }
 
-  private setupErrorHandler() {
+  private setupErrorHandler(): void {
     this.app.use(ErrorHandler)
   }
 
-  public listen() {
-    this.app.listen(this.port, () => {
-      infoLogger.info(`Server running on ${this.port}`)
+  public listen(): Server<typeof IncomingMessage, typeof ServerResponse> {
+    return this.app.listen(this.port, () => {
+      infoLogger.info(`Server running on port ${this.port}`)
     })
   }
 }

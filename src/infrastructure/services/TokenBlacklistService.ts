@@ -4,7 +4,6 @@ import { RedisService } from './RedisService.js'
 import { TokenService } from './TokenService.js'
 
 export class TokenBlacklistService {
-  private static redisClient = redisInstance
   private static tokenService = new TokenService()
   private static redisService = new RedisService(redisInstance.getClient())
 

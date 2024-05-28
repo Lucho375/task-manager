@@ -1,5 +1,6 @@
 import { NextFunction, Response } from 'express'
 import { AbstractTaskRepository, CreateTaskDto, CustomError, IAuthenticatedRequest, UpdateTaskDto } from '../../domain/index.js'
+import { HTTPResponse } from '../http/HTTPResponse.js'
 
 export class TaskController {
   constructor(private readonly taskRepository: AbstractTaskRepository) {}
@@ -8,7 +9,7 @@ export class TaskController {
     try {
       const task = CreateTaskDto.validate({ ...req.body, userId: req.user?.userId })
       const createdTask = await this.taskRepository.create(task)
-      return res.status(201).send({ status: 'success', payload: createdTask })
+      HTTPResponse.success(res, 201, 'Task created', { ...createdTask })
     } catch (error) {
       next(error)
     }
@@ -22,7 +23,7 @@ export class TaskController {
       if (!task) {
         CustomError.badRequest(`Task with id ${id} not exists`)
       }
-      return res.status(200).send({ status: 'success' })
+      HTTPResponse.success(res, 200, 'Task updated')
     } catch (error) {
       next(error)
     }
@@ -35,7 +36,7 @@ export class TaskController {
       if (!deletedTask) {
         CustomError.badRequest(`Task with id ${id} not exists`)
       }
-      return res.status(200).send({ status: 'success' })
+      HTTPResponse.success(res, 200, 'Task deleted')
     } catch (error) {
       next(error)
     }
@@ -44,7 +45,7 @@ export class TaskController {
   public getAll = async (req: IAuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       const tasks = await this.taskRepository.getAll(req.user?.userId!)
-      return res.status(200).send({ status: 'success', payload: tasks })
+      HTTPResponse.success(res, 200, undefined, { tasks })
     } catch (error) {
       next(error)
     }

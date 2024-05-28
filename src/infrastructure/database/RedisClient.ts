@@ -9,7 +9,7 @@ class RedisClient {
 
   private constructor(url: string) {
     this.client = createClient({ url })
-    this.client.on('error', (err) => console.error('Redis Client Error', err))
+    this.client.on('error', (err) => errorLogger.error({ name: 'Redis Client Error', error: err }))
   }
 
   public static getInstance = (url: string) => {

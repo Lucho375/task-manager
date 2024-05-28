@@ -1,5 +1,4 @@
 import { RedisClientType } from 'redis'
-import redisInstance from '../database/RedisClient.js'
 
 export class RedisService {
   constructor(private client: RedisClientType) {}

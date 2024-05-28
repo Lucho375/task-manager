@@ -8,6 +8,7 @@ import {
   RegisterUserDto,
 } from '../../domain/index.js'
 import { TokenBlacklistService } from '../../infrastructure/index.js'
+import { HTTPResponse } from '../http/HTTPResponse.js'
 
 export class AuthController {
   private tokenBlacklistService: typeof TokenBlacklistService
@@ -33,7 +34,7 @@ export class AuthController {
       const hashedPassword = await this.hashService.hash(password)
       const newUser = await this.userRepository.createUser({ username, email, password: hashedPassword })
       const token = this.tokenService.generateToken({ userId: newUser.id })
-      res.status(201).send({ status: 'success', user: newUser, accessToken: token })
+      HTTPResponse.success(res, 201, 'User created', { ...newUser, accessToken: token })
     } catch (error) {
       next(error)
     }
@@ -44,7 +45,7 @@ export class AuthController {
       const { email, password } = LoginUserDto.validate(req.body)
       const user = await this.userRepository.getUserByEmail(email)
       if (!user) {
-        CustomError.unauthorized('Invalid credentialssssss')
+        CustomError.unauthorized('Invalid credentials')
       }
 
       const isPasswordValid = await this.hashService.compare(password, user.password)
@@ -53,8 +54,7 @@ export class AuthController {
       }
 
       const token = this.tokenService.generateToken({ userId: user.id })
-
-      res.status(200).send({ accessToken: token, user })
+      HTTPResponse.success(res, 200, 'login success', { accessToken: token, ...user })
     } catch (error) {
       next(error)
     }
@@ -65,7 +65,7 @@ export class AuthController {
       const authHeader = req.headers.authorization || req.headers['Authorization']
       const token = (authHeader as string).split(' ')[1]
       await this.tokenBlacklistService.addtoBlacklist(token)
-      res.status(200).send({ status: 'success', message: 'logout ok' })
+      HTTPResponse.success(res, 200, 'Logout success')
     } catch (error) {
       next(error)
     }
