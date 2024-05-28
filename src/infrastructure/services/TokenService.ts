@@ -6,7 +6,7 @@ export class TokenService implements AbstractTokenService {
   private readonly secretKey: string = JWT_SECRET
 
   generateToken(payload: Record<string, any>): string {
-    return jwt.sign(payload, this.secretKey)
+    return jwt.sign(payload, this.secretKey, { expiresIn: 35 })
   }
 
   verifyToken<T>(token: string): T {

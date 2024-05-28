@@ -24,8 +24,8 @@ export class MongooseTaskRepository implements AbstractTaskRepository {
     return false
   }
 
-  getAll = async (): Promise<ITaskEntity[]> => {
-    const tasks = await this.taskModel.find()
+  getAll = async (userId: string): Promise<ITaskEntity[]> => {
+    const tasks = await this.taskModel.find({ userId })
     return tasks.map((task) => new TaskEntity({ ...task.toObject(), id: task._id.toString() }))
   }
 }

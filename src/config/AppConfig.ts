@@ -9,6 +9,7 @@ const AppConfigSchema = z.object({
   DB_TYPE: z.enum(['mongo', 'mysql']),
   NODE_ENV: z.enum(['production', 'development', 'test']),
   BACKUP_DIR: z.string().default('backup'),
+  REDIS_URL: z.string().url(),
 })
 
 type AppConfigType = z.infer<typeof AppConfigSchema>
@@ -60,8 +61,12 @@ class AppConfig {
   get BACKUP_DIR(): string {
     return this.config.BACKUP_DIR
   }
+
+  get REDIS_URL(): string {
+    return this.config.REDIS_URL
+  }
 }
 
-const { DB_TYPE, DB_URI, JWT_SECRET, NODE_ENV: NODE_ENV, PORT, BACKUP_DIR } = AppConfig.getInstance()
+const { DB_TYPE, DB_URI, JWT_SECRET, NODE_ENV: NODE_ENV, PORT, BACKUP_DIR, REDIS_URL } = AppConfig.getInstance()
 
-export { DB_TYPE, DB_URI, JWT_SECRET, NODE_ENV, PORT, BACKUP_DIR }
+export { DB_TYPE, DB_URI, JWT_SECRET, NODE_ENV, PORT, BACKUP_DIR, REDIS_URL }

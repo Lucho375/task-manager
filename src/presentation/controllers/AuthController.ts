@@ -7,13 +7,17 @@ import {
   LoginUserDto,
   RegisterUserDto,
 } from '../../domain/index.js'
+import { TokenBlacklistService } from '../../infrastructure/index.js'
 
 export class AuthController {
+  private tokenBlacklistService: typeof TokenBlacklistService
   constructor(
     private readonly hashService: AbstractHashService,
     private readonly userRepository: AbstractUserRepository,
     private readonly tokenService: AbstractTokenService,
-  ) {}
+  ) {
+    this.tokenBlacklistService = TokenBlacklistService
+  }
 
   public register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -58,8 +62,9 @@ export class AuthController {
 
   public logout = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // TODO: implementar logout e invalidar tokens
-
+      const authHeader = req.headers.authorization || req.headers['Authorization']
+      const token = (authHeader as string).split(' ')[1]
+      await this.tokenBlacklistService.addtoBlacklist(token)
       res.status(200).send({ status: 'success', message: 'logout ok' })
     } catch (error) {
       next(error)
