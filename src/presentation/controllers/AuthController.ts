@@ -1,11 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
-import { NODE_ENV } from '../../config/AppConfig.js'
+import { isProduction } from '../../constants/isProduction.js'
 import {
   AbstractHashService,
   AbstractTokenService,
   AbstractUserRepository,
   CustomError,
-  ENODE_ENV,
   LoginUserDto,
   RegisterUserDto,
 } from '../../domain/index.js'
@@ -58,7 +57,7 @@ export class AuthController {
       const refreshToken = this.tokenService.generateRefreshToken({ userId: user.id })
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
-        secure: NODE_ENV === ENODE_ENV.Production,
+        secure: isProduction,
         sameSite: 'strict',
       })
       HTTPResponse.success(res, 200, 'login success', { accessToken, ...user })
@@ -76,7 +75,7 @@ export class AuthController {
       await this.tokenBlacklistService.addtoBlacklist(refreshToken)
       res.clearCookie('refreshToken', {
         httpOnly: true,
-        secure: NODE_ENV === ENODE_ENV.Production,
+        secure: isProduction,
         sameSite: 'strict',
       })
       HTTPResponse.success(res, 200, 'Logout success')

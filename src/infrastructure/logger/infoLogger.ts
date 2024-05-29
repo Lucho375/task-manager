@@ -1,10 +1,9 @@
 import path from 'path'
 import * as winston from 'winston'
-import { NODE_ENV } from '../../config/AppConfig.js'
-import { ENODE_ENV } from '../../domain/enums/NODE_ENV.js'
+import { isProduction } from '../../constants/isProduction.js'
 import { Logger } from './logger.js'
 
-const dirname = NODE_ENV === ENODE_ENV.Production ? path.join('dist', 'logs') : path.join('src', 'logs')
+const dirname = isProduction ? path.join('dist', 'logs') : path.join('src', 'logs')
 
 export const infoLogger = new Logger({
   level: 'info',
