@@ -72,6 +72,8 @@ export class AuthController {
       const authHeader = req.headers.authorization || req.headers['Authorization']
       const token = (authHeader as string).split(' ')[1]
       await this.tokenBlacklistService.addtoBlacklist(token)
+      const { refreshToken } = req.cookies
+      await this.tokenBlacklistService.addtoBlacklist(refreshToken)
       res.clearCookie('refreshToken', {
         httpOnly: true,
         secure: NODE_ENV === ENODE_ENV.Production,

@@ -3,5 +3,5 @@ import { AppExpress } from '../../presentation/application/AppExpress.js'
 
 export async function startHttpServer() {
   const app = new AppExpress(PORT)
-  app.listen()
+  return app.listen()
 }
