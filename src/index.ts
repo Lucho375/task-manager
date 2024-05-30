@@ -3,7 +3,7 @@ import { errorLogger, initializeRedis, intializeDatabase, scheduleCronJobs, star
   try {
     const db = await intializeDatabase()
     const redisClient = await initializeRedis()
-    const httpServer = await startHttpServer()
+    const httpServer = startHttpServer()
     const scheduledTasks = await scheduleCronJobs()
   } catch (error: any) {
     errorLogger.error({ message: error?.message, stack: error?.stack, name: error?.name })
