@@ -1,25 +1,60 @@
 import jwt from 'jsonwebtoken'
-import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from '../../config/AppConfig.js'
 import { AbstractTokenService } from '../../domain/index.js'
 
 export class TokenService implements AbstractTokenService {
-  private readonly ACCESS_SECRET: string = ACCESS_TOKEN_SECRET
-  private readonly REFRESH_SECRET: string = REFRESH_TOKEN_SECRET
+  /**
+   *
+   * @param {string} accessSecret - Secret key for signin access tokens
+   * @param {string} refreshSecret - Secret key for signin refresh tokens
+   * @param {string} accessExpiresIn - Time expiration in seconds for access token
+   * @param {string} refreshExpiresIn  Time expiration in seconds for refresh token
+   */
+  constructor(
+    private readonly accessSecret: string,
+    private readonly refreshSecret: string,
+    private readonly accessExpiresIn: number,
+    private readonly refreshExpiresIn: number,
+  ) {}
 
-  generateAccessToken(payload: Record<string, any>): string {
-    return jwt.sign(payload, this.ACCESS_SECRET, { expiresIn: 600 })
+  private validatePayload(payload: Record<string, any>) {
+    if (!payload || Object.keys(payload).length === 0) throw new Error('Payload cannot be empty')
   }
 
-  generateRefreshToken(payload: Record<string, any>): string {
-    return jwt.sign(payload, this.REFRESH_SECRET, { expiresIn: 1200 })
+  generateAccessToken = async (payload: Record<string, any>): Promise<string> => {
+    this.validatePayload(payload)
+    return new Promise((resolve, reject) => {
+      jwt.sign(payload, this.accessSecret, { expiresIn: this.accessExpiresIn }, (err, encoded) => {
+        if (err) return reject(err)
+        return resolve(encoded as string)
+      })
+    })
   }
 
-  verifyToken<T>(token: string): T {
-    try {
-      const decoded = jwt.verify(token, this.ACCESS_SECRET)
-      return decoded as T
-    } catch (error) {
-      throw error
-    }
+  generateRefreshToken = async (payload: Record<string, any>): Promise<string> => {
+    this.validatePayload(payload)
+    return new Promise((resolve, reject) => {
+      jwt.sign(payload, this.refreshSecret, { expiresIn: this.refreshExpiresIn }, (err, encoded) => {
+        if (err) return reject(err)
+        return resolve(encoded as string)
+      })
+    })
+  }
+
+  verifyAccessToken = async <T>(token: string): Promise<T> => {
+    return new Promise((resolve, reject) => {
+      jwt.verify(token, this.accessSecret, (err, decoded) => {
+        if (err) return reject(err)
+        return resolve(decoded as T)
+      })
+    })
+  }
+
+  verifyRefreshToken = async <T>(token: string): Promise<T> => {
+    return new Promise((resolve, reject) => {
+      jwt.verify(token, this.refreshSecret, (err, decoded) => {
+        if (err) return reject(err)
+        return resolve(decoded as T)
+      })
+    })
   }
 }

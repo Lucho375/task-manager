@@ -18,7 +18,7 @@ export class AuthMiddleware {
 
       const isTokenBlacklisted = await this.tokenBlacklistService.isTokenBlacklisted(token)
       if (isTokenBlacklisted) return HTTPResponse.error(res, 401, 'Token has been invalidated')
-      const decoded = this.tokenService.verifyToken<ITokenPayload>(token)
+      const decoded = await this.tokenService.verifyAccessToken<ITokenPayload>(token)
       req.user = decoded
       next()
     } catch (error) {

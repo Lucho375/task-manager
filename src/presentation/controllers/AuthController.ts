@@ -53,8 +53,8 @@ export class AuthController {
         CustomError.unauthorized('Invalid credentials')
       }
 
-      const accessToken = this.tokenService.generateAccessToken({ userId: user.id })
-      const refreshToken = this.tokenService.generateRefreshToken({ userId: user.id })
+      const accessToken = await this.tokenService.generateAccessToken({ userId: user.id })
+      const refreshToken = await this.tokenService.generateRefreshToken({ userId: user.id })
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: isProduction,

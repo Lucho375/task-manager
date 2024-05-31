@@ -7,6 +7,8 @@ const AppConfigSchema = z.object({
   DB_URI: z.string().url(),
   ACCESS_TOKEN_SECRET: z.string().min(1),
   REFRESH_TOKEN_SECRET: z.string().min(1),
+  ACCESS_EXPIRES_IN: z.string().transform((value) => parseInt(value, 10)),
+  REFRESH_EXPIRES_IN: z.string().transform((value) => parseInt(value, 10)),
   DB_TYPE: z.enum(['mongo', 'mysql']),
   NODE_ENV: z.enum(['production', 'development', 'test']),
   BACKUP_DIR: z.string().default('backup'),
@@ -70,8 +72,38 @@ class AppConfig {
   get REDIS_URL(): string {
     return this.config.REDIS_URL
   }
+
+  get ACCESS_EXPIRES_IN(): number {
+    return this.config.ACCESS_EXPIRES_IN
+  }
+
+  get REFRESH_EXPIRES_IN(): number {
+    return this.config.REFRESH_EXPIRES_IN
+  }
 }
 
-const { DB_TYPE, DB_URI, ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET, NODE_ENV, PORT, BACKUP_DIR, REDIS_URL } = AppConfig.getInstance()
+const {
+  DB_TYPE,
+  DB_URI,
+  ACCESS_TOKEN_SECRET,
+  REFRESH_TOKEN_SECRET,
+  NODE_ENV,
+  PORT,
+  BACKUP_DIR,
+  REDIS_URL,
+  ACCESS_EXPIRES_IN,
+  REFRESH_EXPIRES_IN,
+} = AppConfig.getInstance()
 
-export { ACCESS_TOKEN_SECRET, BACKUP_DIR, DB_TYPE, DB_URI, NODE_ENV, PORT, REDIS_URL, REFRESH_TOKEN_SECRET }
+export {
+  ACCESS_TOKEN_SECRET,
+  BACKUP_DIR,
+  DB_TYPE,
+  DB_URI,
+  NODE_ENV,
+  PORT,
+  REDIS_URL,
+  REFRESH_TOKEN_SECRET,
+  ACCESS_EXPIRES_IN,
+  REFRESH_EXPIRES_IN,
+}
